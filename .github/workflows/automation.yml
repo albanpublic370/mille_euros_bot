@@ -1,0 +1,33 @@
+name: Robot Mille Euros
+on:
+  schedule:
+    - cron: '30 13 * * 1-5' # 14h30 en France, du lundi au vendredi
+  workflow_dispatch: # Permet de le lancer à la main pour tester
+
+jobs:
+  extraction:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recupere le code
+        uses: actions/checkout@v3
+
+      - name: Installe Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Installe FFmpeg et dépendances
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install feedparser requests faster-whisper
+
+      - name: Lance l'extraction (Modele Small)
+        run: python test_mille_euros.py
+
+      - name: Enregistre les resultats
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add jeu_1000_euros_complet.txt
+          git commit -m "Mise à jour quotidienne automatique" || exit 0
+          git push
