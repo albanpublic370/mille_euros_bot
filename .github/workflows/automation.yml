@@ -22,7 +22,7 @@ jobs:
           pip install feedparser requests faster-whisper
 
       - name: Lance l'extraction (Modele Small)
-        run: python mille_euros_bot/mille_euros_2.2.py
+        run: python test_mille_euros_2.2.py
 
       - name: Enregistre les resultats
         run: |
